@@ -1,5 +1,6 @@
 /* eslint-disable no-case-declarations */
 import { useState, useEffect } from "react";
+import { useOutletContext } from "react-router-dom";
 import axios from "axios";
 import {
   Product,
@@ -45,7 +46,8 @@ interface HomeProps {
   searchQuery: string;
 }
 
-function Home({ searchQuery }: HomeProps) {
+function Home() {
+  const { searchQuery } = useOutletContext<HomeProps>();
   const [allProducts, setAllProducts] = useState<ExtendedProduct[]>([]);
   const [filteredProducts, setFilteredProducts] = useState<ExtendedProduct[]>(
     []
@@ -87,7 +89,6 @@ function Home({ searchQuery }: HomeProps) {
     const applyFiltersAndSearch = () => {
       let newFilteredProducts = allProducts;
 
-      // Apply filters
       Object.entries(activeFilters).forEach(([filterId, selectedOptions]) => {
         if (selectedOptions.length > 0) {
           newFilteredProducts = newFilteredProducts.filter((product) => {
@@ -124,7 +125,6 @@ function Home({ searchQuery }: HomeProps) {
         }
       });
 
-      // Apply search
       if (searchQuery) {
         newFilteredProducts = newFilteredProducts.filter((product) =>
           product.title.toLowerCase().includes(searchQuery.toLowerCase())
