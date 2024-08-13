@@ -131,7 +131,6 @@ const Cart: React.FC = () => {
             </div>
           </div>
 
-          {/* Right column - Price Details */}
           <div className="md:w-4/12">
             <div className="bg-white shadow-md rounded-sm p-4">
               <h2 className="text-xl font-semibold mb-4">Price Details</h2>
@@ -147,13 +146,13 @@ const Cart: React.FC = () => {
                 {appliedDiscount > 0 && (
                   <div className="flex justify-between text-green-600">
                     <span>Discount</span>
-                    <span>-₹{appliedDiscount.toFixed(2)}</span>
+                    <span>-${appliedDiscount.toFixed(2)}</span>
                   </div>
                 )}
               </div>
               <div className="flex justify-between py-3 text-lg font-semibold">
                 <span>Total Amount</span>
-                <span>₹{totalPrice.toFixed(2)}</span>
+                <span>${totalPrice.toFixed(2)}</span>
               </div>
               {appliedDiscount > 0 && (
                 <p className="text-green-600 text-sm mt-2">

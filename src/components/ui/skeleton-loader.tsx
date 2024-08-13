@@ -6,7 +6,6 @@ const SkeletonLoader = () => {
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="flex flex-col md:flex-row">
-        {/* Filters Skeleton */}
         <div className="w-full md:w-1/4 mb-4 md:mb-0">
           <div className="h-6 w-24 mb-4">
             <ShimmerEffect />
