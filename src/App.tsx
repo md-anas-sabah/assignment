@@ -1,35 +1,35 @@
-/* eslint-disable react-refresh/only-export-components */
-import { lazy, Suspense } from "react";
-import { createBrowserRouter } from "react-router-dom";
+import React, { lazy, Suspense } from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AppLayout } from "./pages/AppLayout";
 
-// Lazy load the pages
 const Home = lazy(() => import("./pages/home/Home"));
 const Cart = lazy(() => import("./pages/cart/Cart"));
 
-const appRouter = createBrowserRouter([
-  {
-    path: "/",
-    element: <AppLayout />,
-    children: [
-      {
-        path: "/",
-        element: (
-          <Suspense fallback={<div>Loading...</div>}>
-            <Home />
-          </Suspense>
-        ),
-      },
-      {
-        path: "/cart",
-        element: (
-          <Suspense fallback={<div>Loading...</div>}>
-            <Cart />
-          </Suspense>
-        ),
-      },
-    ],
-  },
-]);
+const AppRouter: React.FC = () => {
+  return (
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<AppLayout />}>
+          <Route
+            index
+            element={
+              <Suspense fallback={<div>Loading...</div>}>
+                <Home />
+              </Suspense>
+            }
+          />
+          <Route
+            path="cart"
+            element={
+              <Suspense fallback={<div>Loading...</div>}>
+                <Cart />
+              </Suspense>
+            }
+          />
+        </Route>
+      </Routes>
+    </BrowserRouter>
+  );
+};
 
-export default appRouter;
+export default AppRouter;
