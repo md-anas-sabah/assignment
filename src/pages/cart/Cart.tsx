@@ -16,7 +16,6 @@ interface CartItem {
   title: string;
   price: number;
   amount: number;
-  // Add other properties that your item might have
 }
 
 interface RootState {
@@ -54,6 +53,8 @@ const EmptyCart: React.FC = () => {
 const Cart: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [price, setPrice] = useState<number>(0);
+  const [discountCode, setDiscountCode] = useState<string>("");
+  const [appliedDiscount, setAppliedDiscount] = useState<number>(0);
 
   const dispatch = useDispatch();
 
@@ -63,7 +64,7 @@ const Cart: React.FC = () => {
 
   const { items = [] } = useSelector((store: RootState) => store.cart) || {};
 
-  const totalPrice = useMemo(() => {
+  const subtotal = useMemo(() => {
     return items.reduce((total: number, item: CartItem) => {
       return total + (item.price || 0) * (item.amount || 1);
     }, 0);
@@ -75,9 +76,23 @@ const Cart: React.FC = () => {
     }, 0);
   }, [items]);
 
+  const totalPrice = useMemo(() => {
+    return subtotal - appliedDiscount;
+  }, [subtotal, appliedDiscount]);
+
   const buyItems = () => {
     setPrice(totalPrice);
     setIsOpen(true);
+  };
+
+  const applyDiscount = () => {
+    if (discountCode === "SAVE10") {
+      setAppliedDiscount(subtotal * 0.1);
+    } else if (discountCode === "FLAT50") {
+      setAppliedDiscount(50);
+    } else {
+      alert("Invalid discount code");
+    }
   };
 
   if (items.length === 0) {
@@ -123,20 +138,47 @@ const Cart: React.FC = () => {
               <div className="space-y-3 pb-3 border-b">
                 <div className="flex justify-between">
                   <span>Price ({totalItems} items)</span>
-                  <span>₹{totalPrice}</span>
+                  <span>₹{subtotal.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between">
                   <span>Delivery Charges</span>
                   <span className="text-green-600">FREE</span>
                 </div>
+                {appliedDiscount > 0 && (
+                  <div className="flex justify-between text-green-600">
+                    <span>Discount</span>
+                    <span>-₹{appliedDiscount.toFixed(2)}</span>
+                  </div>
+                )}
               </div>
               <div className="flex justify-between py-3 text-lg font-semibold">
                 <span>Total Amount</span>
-                <span>₹{totalPrice}</span>
+                <span>₹{totalPrice.toFixed(2)}</span>
               </div>
-              <p className="text-green-600 text-sm mt-2">
-                You will save ₹XXX on this order
-              </p>
+              {appliedDiscount > 0 && (
+                <p className="text-green-600 text-sm mt-2">
+                  You will save ₹{appliedDiscount.toFixed(2)} on this order
+                </p>
+              )}
+              <div className="mt-4">
+                <input
+                  type="text"
+                  value={discountCode}
+                  onChange={(e) => setDiscountCode(e.target.value)}
+                  placeholder="Enter discount code"
+                  className="w-full p-2 border rounded-sm"
+                />
+                <button
+                  onClick={applyDiscount}
+                  className="mt-2 w-full bg-gray-200 text-gray-800 px-4 py-2 rounded-sm font-medium hover:bg-gray-300 transition-colors duration-300"
+                >
+                  Apply Discount
+                </button>
+
+                <p className="text-xs text-gray-400 italic">
+                  *Use SAVE10 or FLAT50 for discount
+                </p>
+              </div>
             </div>
           </div>
         </div>

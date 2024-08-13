@@ -7,6 +7,7 @@ import {
   ProductCard,
 } from "../../components/product-card/product-card";
 import SkeletonLoader from "../../components/ui/skeleton-loader";
+import { Menu } from "lucide-react";
 
 const filters = [
   {
@@ -59,12 +60,12 @@ function Home() {
   const [activeFilters, setActiveFilters] = useState<{
     [key: string]: string[];
   }>({});
+  const [isMobileFilterOpen, setIsMobileFilterOpen] = useState(false);
 
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const response = await axios.get("https://dummyjson.com/products");
-        console.log("Fetched products:", response.data.products);
         setAllProducts(response.data.products);
         setFilteredProducts(response.data.products);
         setLoading(false);
@@ -131,7 +132,6 @@ function Home() {
         );
       }
 
-      console.log("Filtered products:", newFilteredProducts);
       setFilteredProducts(newFilteredProducts);
     };
 
@@ -155,9 +155,12 @@ function Home() {
       if (newFilters[filterId].length === 0) {
         delete newFilters[filterId];
       }
-      console.log("New filters:", newFilters);
       return newFilters;
     });
+  };
+
+  const toggleMobileFilter = () => {
+    setIsMobileFilterOpen(!isMobileFilterOpen);
   };
 
   if (showLoader || loading) {
@@ -180,9 +183,20 @@ function Home() {
           : "opacity-0 translate-y-[-20px]"
       }`}
     >
+      <div className="md:hidden mb-4">
+        <button
+          onClick={toggleMobileFilter}
+          className="flex items-center justify-center w-full py-2 bg-gray-200 rounded-md"
+        >
+          <Menu className="mr-2" />
+          Filters
+        </button>
+      </div>
       <div className="flex flex-col md:flex-row">
         <div
-          className={`w-full md:w-1/4 mb-4 md:mb-0 transition-all duration-1000 ease-out delay-300 ${
+          className={`w-full md:w-1/4 mb-4 md:mb-0 transition-all duration-300 ease-in-out ${
+            isMobileFilterOpen ? "block" : "hidden md:block"
+          } ${
             contentVisible
               ? "opacity-100 translate-y-0"
               : "opacity-0 translate-y-[-20px]"
