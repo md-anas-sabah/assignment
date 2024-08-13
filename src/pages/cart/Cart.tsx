@@ -86,6 +86,11 @@ const Cart: React.FC = () => {
   };
 
   const applyDiscount = () => {
+    if (subtotal <= 50) {
+      alert("Discount codes can only be applied to orders over $50.");
+      return;
+    }
+
     if (discountCode === "SAVE10") {
       setAppliedDiscount(subtotal * 0.1);
     } else if (discountCode === "FLAT50") {
@@ -175,7 +180,7 @@ const Cart: React.FC = () => {
                 </button>
 
                 <p className="text-xs text-gray-400 italic">
-                  *Use SAVE10 or FLAT50 for discount
+                  *Use SAVE10 or FLAT50 for discount on orders over $50
                 </p>
               </div>
             </div>
